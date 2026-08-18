@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Escape From The 9-5</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#15140f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Escape Route">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #15140f;
+    --paper: #f3eee0;
+    --ink: #2a2519;
+    --ink-soft: #766e58;
+    --text: #efeadd;
+    --text-dim: #8b8471;
+    --gold: #b8923f;
+    --stamp: #a23f2e;
+    --line: #2a2822;
+    --radius: 6px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    padding: 56px 20px 90px;
+    line-height:1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono{ font-family:'Poppins', sans-serif;
+    font-weight: 500; }
+  #app{ width:100%; max-width: 580px; }
+
+  .file-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom: 30px;
+  }
+  .file-header .label{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .file-header .count{
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+  }
+  .progress-track{
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .progress-fill{
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .card{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 40px 36px 34px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+  }
+  .q-eyebrow{
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .q-prompt{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: clamp(21px, 4.2vw, 25px);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    margin: 0 0 28px;
+  }
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .option{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    text-align:left;
+    background: transparent;
+    border: 1px solid rgba(42,37,25,0.22);
+    border-radius: var(--radius);
+    padding: 15px 18px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .option:hover{ background: rgba(42,37,25,0.05); border-color: var(--ink); }
+  .option:active{ transform: scale(0.995); }
+  .option .dot{
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-soft);
+    flex-shrink:0;
+  }
+  .option:hover .dot{ border-color: var(--gold); background: var(--gold); }
+
+  .text-field{
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgba(42,37,25,0.25);
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--ink);
+    padding: 10px 2px 12px;
+    outline: none;
+  }
+  .text-field:focus{ border-bottom-color: var(--gold); }
+  .text-field::placeholder{ color: rgba(42,37,25,0.35); font-style: italic; }
+  .continue-btn{
+    display:block;
+    width: 100%;
+    margin-top: 26px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .continue-btn:hover{ background: #cca64a; }
+  .continue-btn:active{ transform: scale(0.99); }
+  .skip-note{
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.03em;
+  }
+
+  .progress-note{
+    margin-top:22px;
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align:center;
+    letter-spacing: 0.05em;
+  }
+
+  .stamp{
+    display:inline-block;
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--stamp);
+    border: 1.5px solid var(--stamp);
+    padding: 5px 12px;
+    border-radius: 4px;
+    transform: rotate(-2deg);
+    opacity: 0;
+    animation: stampIn 0.5s ease 0.1s forwards;
+    margin-bottom: 22px;
+  }
+  @keyframes stampIn{
+    0%{ opacity:0; transform: rotate(-2deg) scale(1.3); }
+    100%{ opacity:1; transform: rotate(-2deg) scale(1); }
+  }
+  .result-title{
+    font-family:'Poppins', sans-serif;
+    font-size: clamp(30px, 7vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 14px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .result-rule{
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 0 18px;
+  }
+  .result-tag{
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--text-dim);
+    font-size: 17px;
+    margin: 0 0 26px;
+    line-height: 1.4;
+  }
+
+  .finding-label{
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .finding-text{
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 30px;
+  }
+
+  .report-sheet{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 6px 32px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+  }
+  .report-section{
+    padding: 26px 0;
+    border-top: 1px solid rgba(42,37,25,0.12);
+  }
+  .report-section:first-child{ border-top:none; padding-top: 30px; }
+
+  /* ---- teaser stats: fully sharp, sits right above the blur line to hint at value ---- */
+  .teaser-stats{
+    display: flex;
+    gap: 8px;
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 22px 16px;
+    margin: 4px 0 26px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+  }
+  .teaser-stat{
+    flex: 1;
+    text-align: center;
+  }
+  .teaser-stat .num{
+    font-weight: 700;
+    font-size: 34px;
+    color: var(--stamp);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .teaser-stat .lbl{
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+  .report-section h3{
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .report-section p{ margin: 0; font-size: 15.5px; line-height: 1.65; }
+  .report-section ul{ margin: 0; padding-left: 0; list-style: none; }
+  .report-section li{
+    margin-bottom: 13px;
+    font-size: 15.5px;
+    line-height: 1.65;
+    padding-left: 18px;
+    position: relative;
+  }
+  .report-section li::before{
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+  .report-section li:last-child{ margin-bottom: 0; }
+
+  .quote{
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    color: #8a6a1e;
+  }
+  .key{
+    font-weight: 700;
+    color: var(--stamp);
+  }
+
+  .blueprint{ list-style: none; margin: 0; padding: 0; }
+  .blueprint li{
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    padding-left: 0;
+  }
+  .blueprint li::before{ content:none; }
+  .blueprint li:last-child{ margin-bottom: 0; }
+  .step-num{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--gold);
+    border: 1.5px solid var(--gold);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .locked-zone{ position: relative; margin-top: 30px; }
+  .locked-content{
+    filter: blur(22px);
+    user-select: none;
+    pointer-events: none;
+  }
+  .unlock-overlay{
+    position:fixed;
+    inset: 0;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    gap: 12px;
+    text-align:center;
+    padding: 24px;
+    background: rgba(21,20,15,0.86);
+    z-index: 10;
+  }
+  .unlock-overlay .lock-copy{
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 360px;
+    line-height: 1.5;
+  }
+  .unlock-btn{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    padding: 15px 28px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .unlock-btn:hover{ background: #cca64a; }
+  .unlock-btn:active{ transform: scale(0.98); }
+  .unlock-sub{ font-size: 11px; color: var(--text-dim); font-family:'Poppins', sans-serif;
+    font-weight: 500; letter-spacing:0.03em; }
+
+  .retake{
+    display:block;
+    margin: 30px auto 0;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  .retake:hover{ color: var(--gold); }
+
+  .intro{ text-align: center; padding: 20px 6px; }
+  .intro-eyebrow{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .intro-title{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 9vw, 50px);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin: 0 0 20px;
+  }
+  .intro-sub{
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    max-width: 420px;
+    margin: 0 auto 34px;
+  }
+  .begin-btn{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    border-radius: 4px;
+    padding: 16px 34px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .begin-btn:hover{ background: #cca64a; }
+  .begin-btn:active{ transform: scale(0.98); }
+  .intro-note{
+    margin-top: 16px;
+    font-family:'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .greeting{
+    font-size: 15px;
+    color: var(--text-dim);
+    margin: 0 0 10px;
+  }
+  .reveal-headline{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: clamp(20px, 4.6vw, 25px);
+    color: var(--text);
+    line-height: 1.35;
+    margin: 0 0 24px;
+  }
+
+  /* ---- roadmap diagram ---- */
+  .roadmap{ margin: 0; }
+  .roadmap-stage{
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+  .roadmap-stage:last-child{ margin-bottom: 0; }
+  .roadmap-node-col{ position: relative; display: flex; justify-content: center; }
+  .roadmap-node-col::before{
+    content:"";
+    position: absolute;
+    top: 28px;
+    bottom: -26px;
+    width: 2px;
+    background: rgba(42,37,25,0.18);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .roadmap-stage:last-child .roadmap-node-col::before{ display:none; }
+  .roadmap-dot{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    background: var(--paper);
+    color: var(--gold);
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .roadmap-stage-label{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .roadmap-stage-label .rs-focus{ color: var(--gold); }
+  .roadmap-action{
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .roadmap-branches{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .roadmap-branch{
+    flex: 1 1 150px;
+    border-radius: 4px;
+    padding: 11px 13px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .roadmap-branch .rb-tag{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .roadmap-branch.good{ background: rgba(184,146,63,0.14); border: 1px solid rgba(184,146,63,0.4); }
+  .roadmap-branch.good .rb-tag{ color: #8a6a1e; }
+  .roadmap-branch.typical{ background: transparent; border: 1px solid rgba(42,37,25,0.22); }
+  .roadmap-branch.typical .rb-tag{ color: var(--ink); }
+  .roadmap-branch.slow{ background: rgba(42,37,25,0.04); border: 1px dashed rgba(42,37,25,0.28); }
+  .roadmap-branch.slow .rb-tag{ color: var(--ink-soft); }
+
+  /* ---- make it happen checklist ---- */
+  .action-list{ list-style: none; margin: 0; padding: 0; }
+  .action-item{
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .action-item:last-child{ margin-bottom: 0; }
+  .action-check{
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 1.5px solid var(--gold);
+    border-radius: 4px;
+    margin-top: 2px;
+  }
+  .action-label{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .action-text{ font-size: 15.5px; line-height: 1.55; font-weight: 500; }
+
+  /* ---- email report ---- */
+  .email-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .email-input{
+    flex: 1 1 200px;
+    border: 1px solid rgba(42,37,25,0.25);
+    border-radius: var(--radius);
+    background: transparent;
+    padding: 13px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+  }
+  .email-input:focus{ border-color: var(--gold); }
+  .email-input::placeholder{ color: rgba(42,37,25,0.4); }
+  .email-btn{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 13px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .email-btn:hover{ background: #cca64a; }
+  .email-btn:active{ transform: scale(0.99); }
+  .email-status{
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .email-status.error{ color: var(--stamp); }
+  .email-status.success{ color: #6d5a15; }
+  .email-note{
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  /* ---- closing call to action ---- */
+  .cta-block{
+    margin-top: 8px;
+    background: var(--gold);
+    color: var(--bg);
+    border-radius: var(--radius);
+    padding: 30px 28px;
+    text-align: center;
+  }
+  .cta-label{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 12px;
+  }
+  .cta-headline{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(19px, 4.6vw, 24px);
+    line-height: 1.3;
+    margin: 0 0 16px;
+  }
+  .cta-action{
+    background: rgba(21,20,15,0.1);
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  .cta-sub{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp{ animation: none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const QUESTIONS = [
+  {
+    id:'job',
+    type:'text',
+    prompt:()=>'First things first — what do you currently do for work?',
+    placeholder:'e.g. Retail assistant, teacher, accountant, nurse...',
+    cta:'Continue'
+  },
+  {
+    id:'skill',
+    type:'select',
+    prompt:()=>'Alright — which of these feels most like you?',
+    options:[
+      {label:'Business, money, and numbers', pts:{FREELANCE:1,INVEST:2,AUTOMATE:1}},
+      {label:'Health, fitness, and how bodies work', pts:{COACH:2,LOCAL:2}},
+      {label:'Making things — writing, design, or music', pts:{PRODUCT:2,CONTENT:2}},
+      {label:'Games, sports, or hands-on hobbies', pts:{RESALE:2,LOCAL:1}}
+    ]
+  },
+  {
+    id:'time',
+    type:'select',
+    prompt:(a)=>`Realistically, around your job${a.job ? ' as a ' + a.job.label.toLowerCase() : ''}, how many hours a week could you actually give this?`,
+    options:[
+      {label:'Under 5 hours', pts:{PRODUCT:1,INVEST:1}},
+      {label:'5 to 15 hours', pts:{FREELANCE:1,CONTENT:1,COACH:1}},
+      {label:'15 hours or more', pts:{AUTOMATE:2,LOCAL:1,RESALE:1}}
+    ]
+  },
+  {
+    id:'capital',
+    type:'select',
+    prompt:()=>'How much money can you put in before you see any back?',
+    options:[
+      {label:'Basically nothing', pts:{CONTENT:2,FREELANCE:1}},
+      {label:'Up to £500', pts:{PRODUCT:1,COACH:1}},
+      {label:'£500 to £5,000', pts:{RESALE:2,AUTOMATE:1}},
+      {label:'More than £5,000', pts:{INVEST:3}}
+    ]
+  },
+  {
+    id:'risk',
+    type:'select',
+    prompt:()=>"When something risky could pay off big, or fail completely — what's your gut?",
+    options:[
+      {label:'I want something steady, not a gamble', pts:{FREELANCE:1,LOCAL:1,COACH:1}},
+      {label:"I'll take calculated risks for a real payoff", pts:{RESALE:1,AUTOMATE:1}},
+      {label:"I'm comfortable swinging for something bigger", pts:{INVEST:2,RESALE:1}}
+    ]
+  },
+  {
+    id:'tuesday',
+    type:'select',
+    prompt:(a)=>`Forget ${a.job ? 'being a ' + a.job.label.toLowerCase() : 'work'} for a second — which sounds more like a good Tuesday to you?`,
+    options:[
+      {label:'Talking to a client or student one-on-one', pts:{FREELANCE:1,COACH:2}},
+      {label:'Building something once that works while I sleep', pts:{PRODUCT:2,AUTOMATE:2}},
+      {label:'Posting, writing, or creating something people see', pts:{CONTENT:2}},
+      {label:'Hunting for a deal, a find, or an opportunity', pts:{RESALE:2,INVEST:1}}
+    ]
+  },
+  {
+    id:'audience',
+    type:'select',
+    prompt:()=>'Do you already have people paying attention to you online — a following, a list, a community?',
+    options:[
+      {label:'Not really, starting from zero', pts:{PRODUCT:1,RESALE:1}},
+      {label:'A small one', pts:{CONTENT:2,COACH:1}},
+      {label:'Yes, a real one', pts:{CONTENT:2,FREELANCE:1}}
+    ]
+  },
+  {
+    id:'teachfix',
+    type:'select',
+    prompt:()=>"What's more satisfying — teaching someone something, or fixing and optimizing a system?",
+    options:[
+      {label:'Teaching, explaining, walking someone through it', pts:{COACH:2,CONTENT:1}},
+      {label:'Fixing, organizing, optimizing something that was broken', pts:{AUTOMATE:2,FREELANCE:1}}
+    ]
+  },
+  {
+    id:'peoplebehind',
+    type:'select',
+    prompt:()=>'Would you rather work directly with people, or mostly behind the scenes?',
+    options:[
+      {label:'Directly with people', pts:{FREELANCE:1,COACH:2,LOCAL:1}},
+      {label:'Mostly behind the scenes', pts:{PRODUCT:2,AUTOMATE:1,INVEST:1}}
+    ]
+  },
+  {
+    id:'incomeGoal',
+    type:'select',
+    prompt:(a)=>`Being realistic — how much do you want to be making from this, outside of${a.job ? ' your job as a ' + a.job.label.toLowerCase() : ' your job'}, within the first year?`,
+    options:[
+      {label:'Anything extra — even £200–300 a month would help', pts:{LOCAL:1,RESALE:1,COACH:1}},
+      {label:'£5,000–£10,000 for the year — meaningful side money', pts:{FREELANCE:1,COACH:1,PRODUCT:1}},
+      {label:'£10,000–£30,000 — enough to seriously dent my need for the job', pts:{FREELANCE:1,AUTOMATE:1,PRODUCT:1,CONTENT:1}},
+      {label:'£30,000+ — I want this to fully replace my income', pts:{AUTOMATE:2,PRODUCT:2,CONTENT:1,INVEST:1}}
+    ]
+  },
+  {
+    id:'escape',
+    type:'text',
+    prompt:(a)=>`Last one. If you could escape just one specific thing about being a${/^[aeiou]/i.test((a.job&&a.job.label)||'') ? 'n' : ''} ${a.job ? a.job.label.toLowerCase() : 'your current job'}, what would it be?`,
+    placeholder:'e.g. the commute, my manager, the schedule, the ceiling on my pay...',
+    cta:'Reveal My Escape Route'
+  }
+];
+
+function bySkill(p, opts){
+  const map = {
+    'Business, money, and numbers': opts.A,
+    'Health, fitness, and how bodies work': opts.B,
+    'Making things — writing, design, or music': opts.C,
+    'Games, sports, or hands-on hobbies': opts.D
+  };
+  return map[p.skill] || opts.A;
+}
+
+const ARCHETYPES = {
+  FREELANCE:{
+    title:'Freelance Services',
+    tag:'Sell the skill you already have — one client, one project at a time.',
+    verdict:p=>`You picked <span class="quote">${p.skill}</span> and told us you can give this ${p.timeLower} — that's the exact setup where freelancing beats everything else on this list. You don't need an audience, a product, or a market to build first. You need one person who needs what you already know how to do, and you can get paid the same week you start. On top of that, you said <span class="quote">${p.risk}</span> — which matters, because freelancing carries almost none of the risk the other paths do: you're not betting on a market, an algorithm, or a stranger buying something they've never seen. You're getting paid for something you can already prove you can do.`,
+    why:p=>[
+      `You said ${p.capitalLower} is what you have to invest — freelancing is one of the only paths here that asks for none of it.`,
+      `You told us <span class="quote">${p.tuesday}</span> sounds like a good day — that's a service mindset, not a build-it-and-walk-away one.`,
+      `Money shows up fast here, because you're charging for time and skill you already own, not for something you still have to make or grow.`,
+      `You said ${p.audienceLower} when we asked about an existing audience — and freelancing is one of the few paths where that barely matters; your first client comes from outreach, not from people already following you.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Offer one specific service — a bookkeeping clean-up, a cash-flow spreadsheet, or a pricing review — and list it on Upwork or Fiverr under that exact title, not "business consultant."`,
+        B:`Offer a single 4-week training block or a one-off nutrition audit, and post it directly in a local gym's Facebook group or your own Instagram — not a generic "personal trainer" bio.`,
+        C:`Offer one very specific service — a logo, a 48-hour landing page redesign, or a podcast edit — and list it on Fiverr or Contra under that exact title.`,
+        D:`Offer 1:1 coaching on a specific game rank-up, or fixing a specific hobby setup, and post it in the relevant subreddit or Discord — not a general "services" post.`
+      }),
+      `Find your first client where people already ask for help, and do the work below your fair rate just to get real proof of results.`,
+      `Deliver fast, then ask for a specific testimonial or referral immediately after — that's how client #2 shows up without any advertising.`,
+      `Once you've delivered for three people, raise your price 20–30% for the next one — you'll find out immediately what the market will actually bear.`,
+      `Once you have 3–4 repeat clients, start turning down work outside your specialty — a focused freelancer earns more per hour than a generalist one.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'First contact', action:'Message 10 specific people who might need this — in your network, a relevant subreddit, or a local group. Be specific about what you\'ll do and what it costs, not vague about "services."', best:'Someone replies within days and books you at your asking price.', typical:'One or two replies come back with questions — you refine your pitch and land a smaller first job.', slow:'Mostly silence for the first week or two — that usually means the ask was too vague or aimed at the wrong people, not that the idea is wrong.'},
+      {stage:'Month 1', focus:'Proving it works', action:'Deliver for your first client fast and well, even if the price is lower than you\'d like. Ask for a specific testimonial or referral the moment it\'s done.', best:'The client refers you to someone else before you\'ve even asked twice.', typical:'You get a solid testimonial and one small follow-up job from the same client.', slow:'The client is happy but slow to refer — that\'s fine, go find client #2 yourself rather than waiting.'},
+      {stage:'Month 3', focus:'Raising your price', action:'Once you\'ve delivered for two or three people, raise your rate 20–30% for the next new client and see what the market actually bears.', best:'New clients accept the higher rate without pushback — you were underpriced.', typical:'Some hesitate at the new rate, but you land enough to keep a steady stream of work.', slow:'Nobody bites at the higher price yet — hold at your previous rate a little longer and try again in a month.'},
+      {stage:'Month 6–12', focus:'Specialising', action:'Start turning down work outside your best-fit niche, and let your best clients know you have limited space.', best:'You\'re consistently booked out, turning away work, at a rate well above where you started.', typical:'You have 3–4 repeat clients providing steady, meaningful income alongside anything else you\'re doing.', slow:'Income is real but inconsistent month to month — common in year one; consistency tends to follow in year two.'}
+    ],
+    expect:p=>`Most people who take this seriously land their first paid client within one to three weeks — not from posting and waiting, but from directly messaging people who might need this. Reliable income that actually matters typically takes two to four months of consistent outreach and delivery, not one lucky week. You said you're aiming for ${p.incomeGoal} in your first year — for freelancing, that's realistic if you land two or three steady clients rather than one-off gigs; the income scales with how many hours you can sell, so a bigger goal usually means higher rates or steadier client flow, not luck.`,
+    mistakes:p=>[
+      `Undercharging so much that you resent the work by client three — price to feel slightly uncomfortable, not comfortable.`,
+      `Waiting to feel "ready" or "qualified enough" before reaching out — the market decides that, not you.`,
+      `Trying to serve everyone instead of picking one specific type of client and one specific problem to be known for.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Write down the one thing people already ask you for help with — not what you wish you were known for.'},
+      {when:'This week', text:'Message 5 people directly and offer to do that thing for pay, even at a lower rate than feels fair.'},
+      {when:'This month', text:'Deliver for your first client and ask for a testimonial the same day you finish.'}
+    ]
+  },
+  PRODUCT:{
+    title:'Digital Products',
+    tag:'Build it once, sell it forever — no client calls required.',
+    verdict:p=>`Between picking <span class="quote">${p.skill}</span> and saying you'd rather work <span class="quote">${p.peoplebehind}</span>, you're built for digital products — templates, guides, presets, or small tools you make once and sell repeatedly, without getting on a single call. And because ${p.capitalLower} is what you're starting with, this path matters even more: a digital product is one of the only businesses on this list where your upfront cost can be close to zero and your ceiling isn't capped by how many hours you have.`,
+    why:p=>[
+      `You said ${p.capitalLower} — most digital products cost nothing but your time to make, so this fits.`,
+      `<span class="quote">${p.peoplebehind}</span> tells us you're not chasing repeat client relationships — a product sells itself once it exists.`,
+      `Every sale after the first is close to pure profit, since there's no extra delivery cost per customer.`,
+      `You said <span class="quote">${p.teachfix}</span> satisfies you more — whichever way you leaned, a product lets you bake that instinct into the thing itself once, instead of repeating it live with every customer.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Build a cash-flow spreadsheet template, a simple invoice tracker, or a "first year of freelancing" tax checklist.`,
+        B:`Build a specific 4-week home workout PDF, or a 7-day meal plan for one named goal, like "high-protein vegetarian."`,
+        C:`Build a Canva template pack, a font or preset pack, or a genre-specific writing prompt pack.`,
+        D:`Build a strategy guide for one specific game, a woodworking plan, or a knitting pattern.`
+      }),
+      `List it on Gumroad, Etsy, or Payhip with a clear before/after description, priced between £5 and £12.`,
+      `Post it where your buyer already spends time — a relevant subreddit, Facebook group, or Pinterest board.`,
+      `Use feedback from your first 10 buyers to improve it before you build a second product.`,
+      `Build a simple, direct link people can buy from immediately — even a single Gumroad page counts. Friction kills impulse purchases.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Shipping the first version', action:'Build the narrowest possible version of your product and list it somewhere buyers already browse, even before it feels finished.', best:'You get a sale within the first few days of listing.', typical:'No sales yet, but people are viewing or saving the listing — a sign demand exists, just not converting yet.', slow:'Almost no views at all — usually means the listing title or platform needs to change, not the product itself.'},
+      {stage:'Month 1', focus:'Getting in front of buyers', action:'Share the product directly in 5–10 places your buyer already spends time, not just your own social feed.', best:'A steady trickle of daily sales begins without you doing anything extra.', typical:'Sales come in bursts whenever you actively share it, tapering off in between.', slow:'Only a handful of sales so far — worth testing a different price or a sharper before/after description.'},
+      {stage:'Month 3', focus:'Expanding the catalogue', action:'Use feedback from your first buyers to improve the product, then launch a second, related one.', best:'Your second product outsells the first within its first week.', typical:'Two products are now both selling modestly, compounding your total.', slow:'Still focused on improving product one — a reasonable choice if it isn\'t converting yet.'},
+      {stage:'Month 6–12', focus:'Building a compounding catalogue', action:'Keep adding narrow, specific products to the same niche rather than branching into unrelated ones.', best:'Passive income arrives most days without new active promotion.', typical:'A solid, modest monthly total that grows slowly as your catalogue grows.', slow:'Sales are inconsistent month to month — normal until you have 4–5 products live at once.'}
+    ],
+    expect:p=>`Your first product rarely sells itself. Expect to personally share it in five to ten places before you see real traction. Most first-time creators get an early sale within days if the problem is narrow enough, but a steady trickle of repeat sales usually takes a few months and two or three products, not just one. You said you're aiming for ${p.incomeGoal} in your first year — digital products can get there, but usually with several products live at once rather than one; a single template rarely carries a big goal on its own.`,
+    mistakes:p=>[
+      `Making it too broad ("a guide to productivity") instead of painfully specific ("a template for freelance invoice follow-ups").`,
+      `Spending weeks polishing before anyone's seen it — ship an imperfect version and improve it with real buyer feedback.`,
+      `Pricing based on how long it took you to make, not on how much time or money it saves the buyer.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Pick the single most specific problem you\'ve already solved for yourself.'},
+      {when:'This week', text:'Turn it into a simple downloadable template, checklist, or short guide.'},
+      {when:'This month', text:'List it on Gumroad or Etsy and share it in 5 places your buyer already spends time.'}
+    ]
+  },
+  CONTENT:{
+    title:'Content & Audience',
+    tag:'Build attention first — the money follows.',
+    verdict:p=>`You already have ${p.audienceLower}, and you picked <span class="quote">${p.skill}</span> as what feels like you — that combination means your fastest real path is building attention first, then monetizing it, rather than building a product before anyone's watching. You also said <span class="quote">${p.risk}</span> — audience-building rewards exactly that mindset, since growth is rarely linear and the payoff is a slow, compounding curve rather than a single lucky post.`,
+    why:p=>[
+      `You told us <span class="quote">${p.tuesday}</span> — that's the instinct of someone who wants to make things people see, not just tools people quietly use.`,
+      `${p.audience === "Not really, starting from zero" ? "Starting from zero isn't a dealbreaker, but it does mean this path takes longer to pay off than most of the others" : "Having " + p.audienceLower + " already puts you closer to a first sale than you probably think"}.`,
+      `Content compounds — what you write or post today keeps working for you long after you've moved on to the next thing.`,
+      `You said <span class="quote">${p.peoplebehind}</span> — whichever way you leaned, content still works: some creators build an audience while staying almost entirely behind the camera, others build it by being the face of it.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Post real numbers — a budget breakdown, a pricing decision, or a small business's actual costs — on TikTok, X, or a Substack.`,
+        B:`Post real workout logs, form breakdowns, or progress numbers on Instagram or TikTok.`,
+        C:`Post your actual process — a time-lapse, a rewrite, a behind-the-scenes — on TikTok or YouTube Shorts.`,
+        D:`Post your actual gameplay, builds, or hobby projects with real results, in a niche Discord, subreddit, or on TikTok.`
+      }),
+      `Pick one platform and one narrow angle — not your whole personality, one specific lane.`,
+      `Track what actually gets real engagement, and double down only on that — ignore what you assumed would work.`,
+      `Once you have a small, real audience, offer one small paid thing and let demand tell you what to build next.`,
+      `Once you hit 500–1,000 genuinely engaged followers, test a small paid offer — even a £5 product — before building anything bigger.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Finding your lane', action:'Post once a day on one platform about one narrow angle — not your whole personality, one specific thing you know.', best:'A single post takes off and brings in a wave of new followers.', typical:'Growth is slow but steady — a handful of new followers most days.', slow:'Almost no traction yet — completely normal in the first two weeks; most accounts look like this at the start.'},
+      {stage:'Month 1', focus:'Learning what resonates', action:'Track which specific posts get real engagement — saves, shares, comments — and make more like those, dropping the rest.', best:'You find a format that reliably outperforms everything else you\'ve tried.', typical:'A small, genuinely engaged following starts to form around a couple of recurring themes.', slow:'Still testing formats without a clear winner — give it another month before assuming the whole angle is wrong.'},
+      {stage:'Month 3', focus:'Testing monetisation', action:'Offer your audience one small paid thing — a product, a service, or a coaching slot — even if the audience feels small.', best:'Your first buyers come directly from people who already follow you.', typical:'A few people express interest but don\'t buy yet — useful signal for what to adjust.', slow:'No interest yet — the audience may need to grow further, or trust more, before monetising.'},
+      {stage:'Month 6–12', focus:'Compounding', action:'Keep showing up consistently and let your best content and your paid offer reinforce each other.', best:'Your audience reliably converts into income every time you post something for sale.', typical:'Slow, steady compounding growth in both followers and revenue.', slow:'Growth has plateaued — usually a sign to try a genuinely different format or angle, not just post more.'}
+    ],
+    expect:p=>`This is the slowest path on this list to first income, and the fastest to compounding income after that. Expect months of posting with little to show before something catches — and don't mistake early silence for failure. Most accounts that eventually work were unremarkable for the first 20 to 30 posts. You said you're aiming for ${p.incomeGoal} in your first year — be honest with yourself about that goal against how new your audience is; content is the path here most likely to make a big first-year number difficult, since growth tends to compound slowly before it compounds fast.`,
+    mistakes:p=>[
+      `Switching topics or platforms too early because growth feels slow — consistency in one lane beats novelty.`,
+      `Posting only when you feel inspired, instead of on a schedule you can actually sustain.`,
+      `Chasing follower count instead of tracking who actually engages, saves, or shares — that's your real signal.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Pick one platform and one narrow topic you\'re willing to commit to for a month.'},
+      {when:'This week', text:'Post about the problem you want to eventually solve, every single day.'},
+      {when:'This month', text:'Track what actually gets real engagement, and post only more of that.'}
+    ]
+  },
+  COACH:{
+    title:'Personal Coaching',
+    tag:"Get paid to walk someone through something you've already solved.",
+    verdict:p=>`You picked <span class="quote">${p.skill}</span> and told us teaching and explaining satisfies you more than fixing systems does — that's one of the clearest signals in this whole test. Coaching or mentoring, even done async through messages or short check-ins, turns that instinct directly into income. You also said ${p.timeLower} — which matters, because async coaching is one of the most time-efficient paths on this list per pound earned, since you're not required to be live or on camera.`,
+    why:p=>[
+      `You said you'd rather work <span class="quote">${p.peoplebehind}</span> — coaching is one of the few paths here built entirely around that.`,
+      `Teaching is a skill people pay a real premium for, especially delivered one-on-one instead of as generic content.`,
+      `With ${p.timeLower}, async coaching — written feedback, short weekly check-ins — fits better than live calls. It scales your time instead of burning it.`,
+      `You're comfortable with <span class="quote">${p.risk}</span> — coaching is one of the lower-risk paths here, since you're not waiting on a market or an algorithm, just on your ability to help someone directly.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Offer to review someone's budget, pricing, or small business numbers over a short Loom video or written feedback.`,
+        B:`Offer a 4-week async coaching check-in on training or nutrition over WhatsApp or email, for a flat fee.`,
+        C:`Offer async feedback on someone's writing, design, or music — a marked-up file back within 48 hours, for a flat fee.`,
+        D:`Offer async coaching on a specific game or hobby skill — reviewing footage or giving a written breakdown of technique.`
+      }),
+      `Offer this to three people at a low introductory price before you build anything formal.`,
+      `Ask each person what confused them — that confusion is your actual curriculum, not what you assumed they'd need.`,
+      `Once you've coached a handful of people, raise your price and turn what you learned into a repeatable structure.`,
+      `Turn your most repeated advice into a simple written framework or checklist — this becomes both your teaching tool and, later, a product you can sell on its own.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Landing your first client', action:'Offer three specific people a low-price trial of your coaching, focused on one clear outcome you can help with.', best:'Someone signs up within days and gets real value from the first session.', typical:'One or two people take you up on it after some back-and-forth about what it involves.', slow:'No takers yet — the offer may need to be more specific about the exact result you deliver.'},
+      {stage:'Month 1', focus:'Proving real results', action:'Give detailed, personalised feedback rather than generic advice, and ask directly what confused your client.', best:'Your client gets a visible, specific result and tells other people unprompted.', typical:'Your client is satisfied and continues, but hasn\'t referred anyone yet.', slow:'Feedback isn\'t landing as well as hoped — treat this as data on what to adjust, not a sign to quit.'},
+      {stage:'Month 3', focus:'Building a repeatable method', action:'Turn your most repeated advice into a simple written framework you can reuse with every new client.', best:'Referrals start arriving from past clients without you asking.', typical:'You have a small, steady handful of clients and a clearer sense of your method.', slow:'Still refining your approach client by client — normal before a repeatable system emerges.'},
+      {stage:'Month 6–12', focus:'Raising your rate', action:'Use your track record so far to justify a higher price for new clients.', best:'A full roster of clients at a meaningfully higher rate than you started at.', typical:'A steady, smaller group of loyal clients providing consistent income.', slow:'Growth has been slower than hoped — often means it\'s time to more actively ask happy clients for referrals.'}
+    ],
+    expect:p=>`Your first coaching client is usually the hardest one to find and the easiest one to keep. Expect to price lower than feels comfortable to get your first two or three people signed up, since real testimonials matter more early on than revenue does. You said you're aiming for ${p.incomeGoal} in your first year — coaching income scales with how many people you can serve well at once, so a bigger goal usually means raising your price as you go, not just adding more clients.`,
+    mistakes:p=>[
+      `Overloading people with generic advice instead of specific, personalized feedback on their exact situation.`,
+      `Charging so little that you can't sustain giving real attention to each person.`,
+      `Not asking for outcomes or results from clients — those results become your best marketing.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Write down exactly what you\'d teach someone if they sat with you right now.'},
+      {when:'This week', text:'Offer this to three people at a low introductory price.'},
+      {when:'This month', text:'Ask every client what confused them, and refine your approach around that.'}
+    ]
+  },
+  RESALE:{
+    title:'Buying, Reselling & Deal-Hunting',
+    tag:"Find the gap between what something's worth and what it's priced at.",
+    verdict:p=>`You picked <span class="quote">${p.skill}</span> and said <span class="quote">${p.tuesday}</span> sounds like your kind of day — that's a dealmaker's instinct. Buying underpriced things and reselling them, or spotting opportunities other people miss, fits you better than building or teaching does. You also told us ${p.timeLower} you can give this — resale rewards more hours early on, since sourcing good deals takes active searching, not passive waiting.`,
+    why:p=>[
+      `You said ${p.capitalLower} — resale needs at least some money to start, and your answer suggests you can put some in.`,
+      `You're comfortable with <span class="quote">${p.risk}</span> — resale involves real risk, since things don't always sell, and that doesn't scare you off.`,
+      `This path rewards pattern-recognition and hustle more than expertise — you learn the market by being in it.`,
+      `You said ${p.audienceLower} — resale is one of the few paths on this list where an audience isn't required at all; your buyers come from existing marketplaces, not from people who already know you.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Source overstocked office supplies, software licenses, or returned equipment at discount, and resell on eBay or a B2B marketplace.`,
+        B:`Source used gym equipment or supplements at discount, and resell on Vinted, eBay, or Facebook Marketplace.`,
+        C:`Source undervalued vintage design pieces, instruments, or art supplies from charity shops, and resell on Etsy or Depop.`,
+        D:`Source undervalued trading cards, sneakers, or retro games and consoles from car boot sales or clearance, and resell on eBay or Vinted.`
+      }),
+      `Source five underpriced items this week to properly test the category before committing further.`,
+      `Resell them and track your true profit after fees and time, not just the headline sale price.`,
+      `Reinvest only once you've proven the margin holds up across multiple sales, not just one lucky find.`,
+      `Track which specific items or categories return the best margin after a month, then narrow your focus there instead of buying broadly.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Testing the category', action:'Source and list five underpriced items in one category, checking actual recent sold prices first, not guesses.', best:'All five sell quickly with a real margin after fees.', typical:'Two or three sell at a decent margin, one or two sit longer than expected.', slow:'Slow sell-through across the board — usually means the category or pricing needs rethinking.'},
+      {stage:'Month 1', focus:'Finding your margin', action:'Track true profit after fees, shipping, and your own time on every sale, not just the headline price.', best:'A clear, reliably profitable category becomes obvious.', typical:'Margins are thinner than expected, but a couple of items clearly outperform the rest.', slow:'Margins are disappointing across the board — worth testing a different category before assuming resale itself doesn\'t work.'},
+      {stage:'Month 3', focus:'Scaling what works', action:'Put more time and a bit more capital specifically into the categories that proved profitable in month one.', best:'Consistent weekly profit becomes the norm, not the exception.', typical:'Profit is real but uneven week to week, depending on what you find.', slow:'Still hunting for a category with a reliable margin — keep testing rather than committing more capital yet.'},
+      {stage:'Month 6–12', focus:'Reinvesting', action:'Reinvest profit into slightly larger purchases, only in categories you\'ve already proven work.', best:'A steady, repeatable resale income stream, largely independent of luck.', typical:'Modest but consistent profit that fluctuates with what\'s available to source.', slow:'Profit remains occasional rather than steady — may be a sign to specialise further into one narrow niche.'}
+    ],
+    expect:p=>`Expect your first few resales to teach you more about real margins — after fees, shipping, and your own time — than any amount of research would. Most people find a genuinely profitable niche within their first 15 to 20 items, not their first one or two. You said you're aiming for ${p.incomeGoal} in your first year — resale income scales directly with the capital you're willing to cycle through inventory, so a bigger goal usually needs more capital in motion, not just more hours.`,
+    mistakes:p=>[
+      `Buying based on gut feeling about "coolness" instead of checking actual recent sold prices first.`,
+      `Ignoring platform and shipping fees when calculating margin — they eat more than people expect.`,
+      `Tying up too much capital in unsold inventory before you've proven a category actually works.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Pick one category you already understand well enough to spot a real deal in.'},
+      {when:'This week', text:'Source and list five underpriced items to properly test it.'},
+      {when:'This month', text:'Track true profit after fees, and double down only on what actually worked.'}
+    ]
+  },
+  AUTOMATE:{
+    title:'Micro-Tools & Automation',
+    tag:'Build a small system that quietly makes money without you.',
+    verdict:p=>`Between picking <span class="quote">${p.skill}</span> and telling us fixing and optimizing satisfies you more than teaching does, you're pointed at building something automated — a small tool, alert system, or service that runs without your constant attention. You also said ${p.timeLower} — automation rewards exactly that, since most of the effort is front-loaded into the build, and very little is required once it's running.`,
+    why:p=>[
+      `With ${p.timeLower}, this is the path that pays off later for time spent now — front-loaded work, back-loaded income.`,
+      `You said <span class="quote">${p.peoplebehind}</span> — automation lets you build something valuable without managing ongoing client relationships.`,
+      `Once it exists, it can serve far more people than you could ever help one at a time.`,
+      `You're comfortable with <span class="quote">${p.risk}</span> — building something automated carries real uncertainty about whether anyone will use it, and your answer suggests you can tolerate that long enough to find out.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Build a simple invoice-chasing or expense-categorising spreadsheet or Zap for freelancers or small shops.`,
+        B:`Build a simple workout or meal-plan generator spreadsheet for trainers or gym-goers.`,
+        C:`Build a Zapier or Make automation that repurposes one piece of content into five social posts automatically.`,
+        D:`Build a price-tracking alert — a spreadsheet plus a simple scraper or no-code tool — for a resale market you already know.`
+      }),
+      `Give it to three to five real people for free in exchange for honest feedback before charging anyone.`,
+      `Once it clearly saves people time or money, put a price on it.`,
+      `Automate the delivery so it keeps running without you doing anything manually each time.`,
+      `Once a handful of people are using it and finding it valuable, add a simple recurring or one-time payment — don't wait for it to feel "finished," since it never fully will.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Shipping something rough', action:'Build the smallest possible version that solves one specific repetitive task — a spreadsheet or basic script counts.', best:'A handful of real users try it within the first week and give useful feedback.', typical:'One or two people try it after some direct asking.', slow:'Hard to find anyone willing to try it yet — usually means the problem needs to be more specific and more painful.'},
+      {stage:'Month 1', focus:'Listening to real feedback', action:'Ask everyone who tries it what\'s confusing or missing, and fix only what multiple people mention.', best:'A clear pattern of must-fix issues emerges, pointing directly at what to build next.', typical:'Feedback is mixed, but a few consistent themes start to appear.', slow:'Feedback is vague or contradictory — worth watching people actually use it rather than just asking them.'},
+      {stage:'Month 3', focus:'Testing willingness to pay', action:'Add a simple price once it clearly saves people time or money, even if it feels early.', best:'Your first users convert to paying customers without much resistance.', typical:'People like it but hesitate at the price — useful information on where the value threshold sits.', slow:'Nobody\'s ready to pay yet — the tool may need to prove more value before pricing makes sense.'},
+      {stage:'Month 6–12', focus:'Automating the delivery', action:'Remove yourself from the process entirely so the tool runs and gets used without your manual involvement.', best:'It runs with very little ongoing upkeep and keeps finding new users on its own.', typical:'Still requires some manual attention most weeks, but demand is steady.', slow:'Usage has plateaued — often a sign to revisit who the tool is actually for, not just to add features.'}
+    ],
+    expect:p=>`Expect the first version to be rough and used by almost no one — that's normal. Most successful small tools go through two or three unglamorous versions, shaped by real user complaints, before anyone actually pays for them. You said you're aiming for ${p.incomeGoal} in your first year — automation can support a big goal, but usually not in year one; most tools take time to find real users before the income becomes meaningful.`,
+    mistakes:p=>[
+      `Over-building features nobody asked for before you have a single real user.`,
+      `Picking a problem that's interesting to you but too small or rare to sustain a business.`,
+      `Launching silently instead of directly telling the specific people who have this problem that it now exists.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Find one repetitive task a specific type of person or business does every single week.'},
+      {when:'This week', text:'Build the roughest possible version that solves it — a spreadsheet counts.'},
+      {when:'This month', text:'Give it to five real people for free and collect honest, specific feedback.'}
+    ]
+  },
+  LOCAL:{
+    title:'Local, In-Person Service',
+    tag:'Get paid nearby, for something hands-on.',
+    verdict:p=>`You picked <span class="quote">${p.skill}</span> and said you'd rather work <span class="quote">${p.peoplebehind}</span> — a local, in-person service plays to both of those directly, without needing an online audience or a digital product at all. And because ${p.capitalLower} is what you have available, this fits especially well — most local services need little more than your time, a phone, and word of mouth to get started.`,
+    why:p=>[
+      `With ${p.timeLower}, local services let you start earning almost immediately, since demand already exists near you.`,
+      `You said ${p.capitalLower} — most local services need very little money to start, just your time and skill.`,
+      `Being physically present is the whole value here — it's the one path on this list that's immune to online competition.`,
+      `You're comfortable with <span class="quote">${p.risk}</span> — local, in-person work is one of the steadier paths here, since you're not waiting on an algorithm or an unproven market.`
+    ],
+    blueprint:p=>[
+      bySkill(p,{
+        A:`Offer small business bookkeeping or invoicing help to shops in your area, posted in a local Facebook group or on Nextdoor.`,
+        B:`Offer 1:1 personal training or a small group class at a local park, posted in a local Facebook group or on Nextdoor.`,
+        C:`Offer sign-painting, photography, or design work for local businesses, posted on Instagram with your location tagged.`,
+        D:`Offer to fix bikes, tune equipment, or coach a local youth team, posted in a local Facebook group or on Nextdoor.`
+      }),
+      `Offer it directly to five specific people you already know or can reach easily.`,
+      `Get one paying customer before you build a website, business cards, or anything formal.`,
+      `Ask every satisfied customer for one referral — local trust spreads person to person, not through ads.`,
+      `Once you have five to ten regular customers, raise your rate for new customers only — loyal existing customers rarely leave over a modest increase.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'First customer', action:'Offer your service directly to five specific people nearby — a post in a local group counts as direct if it\'s specific.', best:'A paying customer books you within the first week.', typical:'A couple of people express interest and one books a trial.', slow:'No takers yet — widen who you\'re asking rather than changing the offer itself.'},
+      {stage:'Month 1', focus:'Earning trust', action:'Deliver reliably for your first customers, then ask each one directly for a referral.', best:'Referrals start arriving without much prompting.', typical:'Customers are happy, and one or two mention you to someone else.', slow:'Referrals are slow — most people need reminding more than once before they think to recommend you.'},
+      {stage:'Month 3', focus:'Building a regular base', action:'Keep the customers who book you consistently and let occasional one-off customers go if they\'re not sustainable.', best:'5–10 regular customers booked in on an ongoing basis.', typical:'A mix of regulars and one-off jobs providing a modest, steady income.', slow:'Mostly one-off work so far — normal in the first few months before regulars build up.'},
+      {stage:'Month 6–12', focus:'Raising rates sustainably', action:'Raise your rate for new customers only, keeping your loyal existing customers at their current price.', best:'A full schedule at a meaningfully higher rate than you started with.', typical:'Comfortable, growing income with a steady base of regulars.', slow:'Growth has been gradual rather than dramatic — completely normal for local, trust-based work.'}
+    ],
+    expect:p=>`Local trust builds slowly at first and then compounds through word of mouth. Expect your first few customers to come from direct outreach, not from people finding you — but each happy customer usually brings one or two more without you doing anything extra. You said you're aiming for ${p.incomeGoal} in your first year — local services are reliable but capped by your own hours, so a bigger goal usually means raising your rate over time rather than working unlimited hours.`,
+    mistakes:p=>[
+      `Underpricing to seem "affordable" — local customers usually value reliability over being the cheapest option.`,
+      `Not asking directly for referrals — most happy customers won't think to offer one unprompted.`,
+      `Overcommitting your schedule before you've figured out what a sustainable workload actually feels like.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Write down the one hands-on skill or service you could offer someone nearby.'},
+      {when:'This week', text:'Offer it directly to five specific people you already know or can reach easily.'},
+      {when:'This month', text:'Ask every satisfied customer for one referral, directly, not just hoping for one.'}
+    ]
+  },
+  INVEST:{
+    title:'Patient Capital Growth',
+    tag:'Grow money you already have — patiently, not by trading it.',
+    verdict:p=>`You told us you can put in ${p.capitalLower} and you're comfortable with <span class="quote">${p.risk}</span> — that combination points toward patiently growing capital you already have, rather than trading it actively or chasing short-term calls. You also said ${p.timeLower} — this path is deliberately the lightest one here in terms of weekly effort, since the real work is in the initial setup and then simply staying consistent.`,
+    why:p=>[
+      `This path only works because you actually have money to put in — without ${p.capitalLower}, it isn't available to you yet.`,
+      `You're comfortable with real risk, but <span class="key">patient</span> is the operative word here — this is about time in the market, not signals or short-term bets.`,
+      `It also takes the least weekly time of anything on this list, which matters if you're stretched thin elsewhere.`,
+      `You said <span class="quote">${p.teachfix}</span> satisfies you more — whichever you picked, this path doesn't depend on either instinct; it depends far more on patience and consistency than on any particular skill.`
+    ],
+    blueprint:p=>[
+      `Spend this week learning the basics of low-cost, diversified investing — index funds and tax-advantaged accounts like an ISA or pension, rather than individual stock picks.`,
+      `Set up automatic, regular contributions — consistency matters far more here than timing ever will.`,
+      `Ignore short-term news and price swings; this path is measured in years, not weeks.`,
+      `Revisit and rebalance only occasionally — resist the urge to check in or adjust constantly.`,
+      `Review your contributions and allocation no more than once or twice a year — frequent checking tends to increase anxiety and encourage impulsive changes, not better decisions.`
+    ],
+    roadmap:[
+      {stage:'Week 1–2', focus:'Getting set up', action:'Open the right kind of account and learn the very basics of low-cost, diversified investing before contributing anything.', best:'Your first contribution is made and automated within the first two weeks.', typical:'It takes a bit longer to feel confident, but the account is open and ready.', slow:'Still researching after a few weeks — that\'s fine here; getting it right matters more than rushing.'},
+      {stage:'Month 1', focus:'Automating consistency', action:'Set up a regular, automatic contribution at an amount you can sustain without thinking about it.', best:'Contributions run smoothly every month without any manual effort.', typical:'You adjust the amount once or twice to something more sustainable.', slow:'Contributions are irregular so far — worth automating fully so it doesn\'t depend on remembering.'},
+      {stage:'Month 3', focus:'Staying the course', action:'Leave the account alone and resist the urge to check it more than occasionally.', best:'The balance is quietly growing and you barely think about it.', typical:'A market dip happens at some point — the plan is simply to keep contributing through it.', slow:'Checking it often is causing some anxiety — this is the stage where that habit is worth breaking.'},
+      {stage:'Month 6–12', focus:'Reviewing, not reacting', action:'Review your contributions and allocation once, at most twice a year, and rebalance only if genuinely needed.', best:'Everything is on track for the long game, exactly as intended.', typical:'Progress feels slow, which is normal — this path is measured in years, not months.', slow:'Still early days with little visible progress — that\'s expected, not a sign anything is wrong.'}
+    ],
+    expect:p=>`This is the slowest path on this list to feel like anything is happening, and that's by design. Meaningful growth here is measured in years, not months, and the value comes precisely from not touching it. You said you're aiming for ${p.incomeGoal} in your first year — it's worth being honest that patient capital growth is the slowest path here toward a specific first-year number; this path is built for years, not a single year's target.`,
+    mistakes:p=>[
+      `Checking your balance so often that short-term drops feel like reasons to panic or change course.`,
+      `Chasing whatever performed best last year instead of sticking with a consistent, diversified approach.`,
+      `Treating this the same way as active trading — the mindset required is almost the opposite.`
+    ],
+    makeItHappen:[
+      {when:'Today', text:'Spend 30 minutes learning the basics of low-cost, diversified index investing.'},
+      {when:'This week', text:'Open the right kind of account and set up an automatic monthly contribution.'},
+      {when:'This month', text:'Leave it alone, and resist the urge to check it more than once.'}
+    ]
+  }
+};
+
+let current = 0;
+const answers = {};
+const SELECT_COUNT = QUESTIONS.filter(q=>q.type==='select').length;
+
+function computeResult(){
+  const totals = {};
+  Object.keys(ARCHETYPES).forEach(k=> totals[k]=0);
+  QUESTIONS.forEach(q=>{
+    const chosen = answers[q.id];
+    if(!chosen || !chosen.pts) return;
+    Object.entries(chosen.pts).forEach(([k,v])=>{ totals[k]=(totals[k]||0)+v; });
+  });
+  const ranked = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+  return { topKey: ranked[0][0], runnerKey: ranked[1][0] };
+}
+
+function buildProfile(){
+  return {
+    job: answers.job ? answers.job.label : '',
+    escape: answers.escape ? answers.escape.label : "the parts of the day that aren't really yours",
+    skill: answers.skill.label,
+    time: answers.time.label,
+    timeLower: answers.time.label.toLowerCase(),
+    capital: answers.capital.label,
+    capitalLower: answers.capital.label.toLowerCase(),
+    risk: answers.risk.label,
+    tuesday: answers.tuesday.label,
+    audience: answers.audience.label,
+    audienceLower: answers.audience.label.toLowerCase(),
+    teachfix: answers.teachfix.label,
+    peoplebehind: answers.peoplebehind.label,
+    incomeGoal: answers.incomeGoal.label,
+    incomeGoalLower: answers.incomeGoal.label.toLowerCase()
+  };
+}
+
+function stripHtml(str){
+  return str.replace(/<[^>]+>/g, '');
+}
+
+function buildReportText(profile, top, runner){
+  const lines = [];
+  lines.push(`YOUR ESCAPE ROUTE: ${top.title}`);
+  lines.push(top.tag);
+  lines.push('');
+  lines.push('THE VERDICT');
+  lines.push(stripHtml(top.verdict(profile)));
+  lines.push('');
+  lines.push('YOUR BLUEPRINT');
+  top.blueprint(profile).forEach((s,i)=> lines.push(`${i+1}. ${stripHtml(s)}`));
+  lines.push('');
+  lines.push('HOW TO MAKE THIS HAPPEN');
+  top.makeItHappen.forEach(a=> lines.push(`${a.when.toUpperCase()}: ${a.text}`));
+  lines.push('');
+  lines.push(`YOUR BACKUP ROUTE: ${runner.title} — ${runner.tag}`);
+  lines.push('');
+  lines.push('(This is a condensed version of your full report.)');
+  return lines.join('\n');
+}
+
+function buildReportPayload(email, profile, top, runner){
+  return {
+    email,
+    title: top.title,
+    tag: top.tag,
+    verdict: stripHtml(top.verdict(profile)),
+    why: top.why(profile).map(stripHtml),
+    blueprint: top.blueprint(profile).map(stripHtml),
+    roadmap: top.roadmap,
+    expect: stripHtml(top.expect(profile)),
+    mistakes: top.mistakes(profile).map(stripHtml),
+    makeItHappen: top.makeItHappen,
+    runnerTitle: runner.title,
+    runnerTag: runner.tag
+  };
+}
+
+function renderIntro(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="intro">
+      <div class="intro-eyebrow">The Escape Assessment</div>
+      <h1 class="intro-title">Find Your Escape<br>From The 9–5</h1>
+      <p class="intro-sub">A few honest questions about your job, your time, your money, and your risk tolerance — and one realistic way out, built around your actual life, not someone else's success story.</p>
+      <button class="begin-btn" id="beginBtn">Begin the Assessment</button>
+      <div class="intro-note">Takes about 2 minutes · Nothing is saved</div>
+    </div>
+  `;
+  document.getElementById('beginBtn').addEventListener('click', renderQuestion);
+}
+
+function selectStepLabel(){
+  const q = QUESTIONS[current];
+  if(q.type !== 'select') return '';
+  const doneBefore = QUESTIONS.slice(0,current).filter(x=>x.type==='select').length;
+  return `${doneBefore+1} / ${SELECT_COUNT}`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const app = document.getElementById('app');
+  const pct = (current / QUESTIONS.length) * 100;
+  const promptText = q.prompt(answers);
+
+  const bodyHtml = q.type === 'select'
+    ? `
+      <div class="options">
+        ${q.options.map((o,i)=>`
+          <button class="option" data-idx="${i}">
+            <span class="dot"></span><span>${o.label}</span>
+          </button>
+        `).join('')}
+      </div>
+    `
+    : `
+      <input type="text" class="text-field" id="textInput" placeholder="${q.placeholder}" autocomplete="off" />
+      <button class="continue-btn" id="continueBtn">${q.cta}</button>
+    `;
+
+  app.innerHTML = `
+    <div class="file-header">
+      <div class="label">Escape Assessment</div>
+      <div class="count mono">${q.type==='select' ? selectStepLabel() : ''}</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="card">
+      <div class="q-eyebrow">Question ${current+1} of ${QUESTIONS.length}</div>
+      <p class="q-prompt">${promptText}</p>
+      ${bodyHtml}
+    </div>
+    <div class="progress-note">This stays between you and your exit plan.</div>
+  `;
+
+  const advance = (label)=>{
+    answers[q.id] = { label, pts:{} };
+    current++;
+    if(current < QUESTIONS.length){
+      renderQuestion();
+    } else {
+      renderResult();
+    }
+  };
+
+  if(q.type === 'select'){
+    app.querySelectorAll('.option').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const idx = parseInt(btn.getAttribute('data-idx'));
+        answers[q.id] = q.options[idx];
+        current++;
+        if(current < QUESTIONS.length){
+          renderQuestion();
+        } else {
+          renderResult();
+        }
+      });
+    });
+  } else {
+    const input = document.getElementById('textInput');
+    const btn = document.getElementById('continueBtn');
+    input.focus();
+    const submit = ()=>{
+      const val = input.value.trim();
+      advance(val || (q.id === 'job' ? 'your current job' : ''));
+    };
+    btn.addEventListener('click', submit);
+    input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submit(); });
+  }
+}
+
+function renderResult(unlocked = false){
+  const { topKey, runnerKey } = computeResult();
+  const profile = buildProfile();
+  const top = ARCHETYPES[topKey];
+  const runner = ARCHETYPES[runnerKey];
+  const whyList = top.why(profile);
+  const blueprintSteps = top.blueprint(profile);
+  const mistakes = top.mistakes(profile);
+  const app = document.getElementById('app');
+
+  try{ localStorage.setItem('escapeRouteAnswers', JSON.stringify(answers)); } catch(e){ /* ignore */ }
+
+  const reportSheetHtml = `
+    <div class="report-sheet">
+      <div class="report-section">
+        <h3>The verdict</h3>
+        <p>${top.verdict(profile)}</p>
+      </div>
+      <div class="report-section">
+        <h3>Why this fits you</h3>
+        <ul>
+          ${whyList.map(w=>`<li>${w}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Your blueprint</h3>
+        <ol class="blueprint">
+          ${blueprintSteps.map((step,i)=>`
+            <li><span class="step-num">${i+1}</span><span>${step}</span></li>
+          `).join('')}
+        </ol>
+      </div>
+      <div class="report-section">
+        <h3>Your roadmap</h3>
+        <div class="roadmap">
+          ${top.roadmap.map((s,i)=>`
+            <div class="roadmap-stage">
+              <div class="roadmap-node-col"><div class="roadmap-dot">${i+1}</div></div>
+              <div>
+                <div class="roadmap-stage-label">${s.stage} <span class="rs-focus">— ${s.focus}</span></div>
+                <div class="roadmap-action">${s.action}</div>
+                <div class="roadmap-branches">
+                  <div class="roadmap-branch good"><span class="rb-tag">Best case</span>${s.best}</div>
+                  <div class="roadmap-branch typical"><span class="rb-tag">Typical</span>${s.typical}</div>
+                  <div class="roadmap-branch slow"><span class="rb-tag">If it's slow</span>${s.slow}</div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="report-section">
+        <h3>What to expect</h3>
+        <p>${top.expect(profile)}</p>
+      </div>
+      <div class="report-section">
+        <h3>Mistakes to avoid</h3>
+        <ul>
+          ${mistakes.map(m=>`<li>${m}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Your backup route: ${runner.title}</h3>
+        <p>${runner.tag}</p>
+      </div>
+      <div class="report-section">
+        <h3>How to make this happen</h3>
+        <ul class="action-list">
+          ${top.makeItHappen.map(a=>`
+            <li class="action-item">
+              <span class="action-check"></span>
+              <span><span class="action-label">${a.when}</span><span class="action-text">${a.text}</span></span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+      <div class="report-section">
+        <h3>Email yourself this report</h3>
+        <div class="email-row">
+          <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" autocomplete="off" />
+          <button class="email-btn" id="emailBtn">Email Me This</button>
+        </div>
+        <div class="email-status" id="emailStatus"></div>
+        <div class="email-note">Sends a real PDF to your inbox if the backend is connected — otherwise opens your own email app instead.</div>
+      </div>
+      <div class="cta-block">
+        <div class="cta-label">Your move</div>
+        <div class="cta-headline">Everything above means nothing until you actually do this.</div>
+        <div class="cta-action">${top.makeItHappen[0].text}</div>
+        <div class="cta-sub">Do it today — not this week. Today.</div>
+      </div>
+    </div>
+  `;
+
+  const revealHtml = `
+    <div class="file-header">
+      <div class="label">Escape Assessment</div>
+      <div class="count mono">Complete</div>
+    </div>
+    <p class="reveal-headline">Your personalized escape route is ready.</p>
+    <div class="teaser-stats">
+      <div class="teaser-stat"><div class="num">${blueprintSteps.length}</div><div class="lbl">Step Blueprint</div></div>
+      <div class="teaser-stat"><div class="num">${top.roadmap.length}</div><div class="lbl">Stage Roadmap</div></div>
+      <div class="teaser-stat"><div class="num">${mistakes.length}</div><div class="lbl">Mistakes To Avoid</div></div>
+      <div class="teaser-stat"><div class="num">${top.makeItHappen.length}</div><div class="lbl">Part Action Plan</div></div>
+    </div>
+    <div class="stamp">Exit Cleared</div>
+    <div class="finding-label" style="margin-bottom:6px;">Your way out</div>
+    <h1 class="result-title">${top.title}</h1>
+    <div class="result-rule"></div>
+    <p class="result-tag">${top.tag}</p>
+    <p class="finding-text" style="margin-bottom:4px;">You told us the thing you most want to escape is <span class="quote">"${profile.escape}"</span> — everything below is built to actually get you there.</p>
+  `;
+
+  if(unlocked){
+    app.innerHTML = `
+      <div class="locked-zone">${revealHtml}${reportSheetHtml}</div>
+      <button class="retake" id="retakeBtn">↺ Start over — retake the assessment</button>
+    `;
+  } else {
+    app.innerHTML = `
+      <div class="locked-zone">
+        <div class="locked-content">${revealHtml}${reportSheetHtml}</div>
+      </div>
+      <div class="unlock-overlay">
+        <div class="lock-copy">Your personalized escape route is ready — which path fits you, why, your full step-by-step blueprint, a realistic timeline, mistakes to avoid, and exactly what to do today, this week, and this month, is sealed until you unlock it.</div>
+        <button class="unlock-btn" id="unlockBtn">Unlock My Escape Route — £9.99</button>
+        <div class="unlock-sub">One-time payment · Instant access</div>
+        <button class="retake" id="retakeBtn" style="color:var(--text-dim);">↺ Start over instead</button>
+      </div>
+    `;
+  }
+
+  if(!unlocked){
+    document.getElementById('unlockBtn').addEventListener('click', async ()=>{
+      const btn = document.getElementById('unlockBtn');
+      btn.disabled = true;
+      btn.textContent = 'Redirecting to checkout...';
+      try{
+        const resp = await fetch('/api/create-checkout-session', { method: 'POST' });
+        if(!resp.ok) throw new Error('backend not available');
+        const data = await resp.json();
+        if(!data.url) throw new Error('no checkout url returned');
+        window.location.href = data.url;
+      } catch(e){
+        // No real payment backend deployed yet — fall back to the old direct-unlock
+        // behaviour so the file still works standalone before Stripe is set up.
+        renderResult(true);
+      }
+    });
+  }
+
+  document.getElementById('emailBtn').addEventListener('click', async ()=>{
+    const input = document.getElementById('emailInput');
+    const status = document.getElementById('emailStatus');
+    const btn = document.getElementById('emailBtn');
+    const email = input.value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(email)){
+      status.textContent = 'Enter a valid email address first.';
+      status.className = 'email-status error';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    status.textContent = '';
+
+    try{
+      const payload = buildReportPayload(email, profile, top, runner);
+      const response = await fetch('/api/send-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if(!response.ok) throw new Error('backend not available');
+      status.textContent = 'Sent! Check your inbox for the PDF.';
+      status.className = 'email-status success';
+    } catch(e){
+      // No backend deployed (or it failed) — fall back to opening the user's own email app
+      const subject = encodeURIComponent(`Your Escape Route: ${top.title}`);
+      const body = encodeURIComponent(buildReportText(profile, top, runner));
+      const mailtoUrl = `mailto:${email}?subject=${subject}&body=${body}`;
+      try{ window.location.href = mailtoUrl; } catch(e2){ /* ignore */ }
+      status.textContent = 'Opening your email app now — hit send when it opens.';
+      status.className = 'email-status success';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Email Me This';
+    }
+  });
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{
+    current = 0;
+    Object.keys(answers).forEach(k=> delete answers[k]);
+    try{ localStorage.removeItem('escapeRouteAnswers'); } catch(e){ /* ignore */ }
+    renderIntro();
+  });
+}
+
+async function init(){
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+  const canceled = params.get('canceled');
+
+  if(sessionId){
+    window.history.replaceState({}, '', window.location.pathname);
+    try{
+      const resp = await fetch(`/api/verify-session?session_id=${encodeURIComponent(sessionId)}`);
+      const data = await resp.json();
+      const saved = localStorage.getItem('escapeRouteAnswers');
+      if(data.paid && saved){
+        Object.assign(answers, JSON.parse(saved));
+        renderResult(true);
+        return;
+      }
+    } catch(e){ /* fall through to intro below */ }
+    renderIntro();
+    return;
+  }
+
+  if(canceled){
+    window.history.replaceState({}, '', window.location.pathname);
+    const saved = localStorage.getItem('escapeRouteAnswers');
+    if(saved){
+      try{
+        Object.assign(answers, JSON.parse(saved));
+        renderResult(false);
+        return;
+      } catch(e){ /* fall through to intro below */ }
+    }
+  }
+
+  renderIntro();
+}
+
+init();
+</script>
+
+</body>
+</html>
